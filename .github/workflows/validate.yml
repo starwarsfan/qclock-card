@@ -1,3 +1,4 @@
+# .github/workflows/validate.yml
 name: Validate
 
 on:
@@ -16,23 +17,12 @@ on:
 permissions: {}
 
 jobs:
-  hassfest: # https://developers.home-assistant.io/blog/2020/04/16/hassfest
-    name: Hassfest validation
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@v4
 
-      - name: Run hassfest validation
-        uses: home-assistant/actions/hassfest@55b4a5d23e09d627c2773c2ef82afa98904d65b4 # master
-
-  hacs: # https://github.com/hacs/action
-    name: HACS validation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run HACS validation
-        uses: hacs/action@d556e736723344f83838d08488c983a15381059a # 22.5.0
+      - name: HACS Action
+        uses: hacs/action@main
         with:
-          category: integration
-          # Remove this 'ignore' key when you have added brand images for your integration to https://github.com/home-assistant/brands
-          ignore: brands
+          category: plugin

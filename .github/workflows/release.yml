@@ -8,7 +8,7 @@ on:
 permissions: {}
 
 env:
-  INTEGRATION_NAME: qclock-card
+  CARD_NAME: qclock-card
 
 jobs:
   release:
@@ -18,10 +18,10 @@ jobs:
       contents: write
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -52,15 +52,10 @@ jobs:
               out.write('\n'.join(notes).strip())
           EOF
 
-      - name: Set version and hash variables
+      - name: Set version variables
         run: |
           echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
           echo "GITHASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: ZIP the integration directory
-        run: |
-          cd custom_components
-          zip -r ../${{ env.INTEGRATION_NAME }}-${{ env.VERSION }}-${{ env.GITHASH }}.zip ./
 
       - name: Set prerelease flag
         run: |
@@ -76,7 +71,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body_path: release_notes.txt
-          files: ${{ env.INTEGRATION_NAME }}-${{ env.VERSION }}-${{ env.GITHASH }}.zip
+          files: ${{ env.CARD_NAME }}.js
           prerelease: ${{ env.PRERELEASE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
