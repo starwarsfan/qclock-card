@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QClock Preview</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #141210;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      font-family: 'Courier New', monospace;
+      padding: 2rem 1rem;
+    }
+
+    h1 { color: #c8a050; font-size: 0.85rem; letter-spacing: 0.4em; opacity: 0.6; }
+
+    .card-wrapper { width: min(340px, 88vw); }
+
+    .lang-tabs {
+      display: flex;
+      gap: 0.4rem;
+      justify-content: center;
+    }
+    .lang-tabs button {
+      background: #1e1a14;
+      border: 1px solid #332b1e;
+      color: #7a6a4a;
+      padding: 0.3em 0.9em;
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .lang-tabs button:hover  { background: #2a2318; color: #c8a050; }
+    .lang-tabs button.active { background: #2a2318; border-color: #c8a050; color: #c8a050; }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+      max-width: 340px;
+      width: 100%;
+    }
+    .time-grid button {
+      background: #1a1710;
+      border: 1px solid #2a2518;
+      color: #7a6a4a;
+      padding: 0.35em 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .time-grid button:hover { background: #242010; color: #c8a050; }
+    .time-grid button.now  {
+      background: #242010;
+      border-color: #c8a050;
+      color: #c8a050;
+      grid-column: span 4;
+      letter-spacing: 0.15em;
+    }
+
+    .debug {
+      color: #4a4030;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+    .debug .t { color: #8a7050; }
+    .debug .w { color: #c8a050; }
+  </style>
+
+  <script src="qclock-card.js"></script>
+</head>
+<body>
+
+<h1>Q C L O C K · P R E V I E W</h1>
+
+<div class="card-wrapper">
+  <qclock-card id="clock"></qclock-card>
+</div>
+
+<div class="lang-tabs">
+  <button onclick="setLang('de')" class="active">DE</button>
+  <button onclick="setLang('en')">EN</button>
+  <button onclick="setLang('fr')">FR</button>
+  <button onclick="setLang('it')">IT</button>
+  <button onclick="setLang('es')">ES</button>
+</div>
+
+<div class="time-grid">
+  <button onclick="setTime(0,0)">0:00</button>
+  <button onclick="setTime(1,0)">1:00</button>
+  <button onclick="setTime(6,0)">6:00</button>
+  <button onclick="setTime(12,0)">12:00</button>
+  <button onclick="setTime(12,5)">:05</button>
+  <button onclick="setTime(12,10)">:10</button>
+  <button onclick="setTime(12,15)">:15</button>
+  <button onclick="setTime(12,20)">:20</button>
+  <button onclick="setTime(12,25)">:25</button>
+  <button onclick="setTime(12,30)">:30</button>
+  <button onclick="setTime(12,35)">:35</button>
+  <button onclick="setTime(12,40)">:40</button>
+  <button onclick="setTime(12,45)">:45</button>
+  <button onclick="setTime(12,50)">:50</button>
+  <button onclick="setTime(12,55)">:55</button>
+  <button onclick="setTime(12,3)">:03 ·</button>
+  <button class="now" onclick="resetToNow()">▶ JETZT</button>
+</div>
+
+<div class="debug">
+  <span class="t" id="timeDisp">--:--</span>
+  &nbsp;→&nbsp;
+  <span class="w" id="wordDisp">…</span>
+</div>
+
+<script>
+  const clock = document.getElementById("clock");
+  let currentLang = "de";
+
+  clock.setConfig({ language: currentLang });
+
+  function updateDebug(h, m) {
+    const def    = CLOCK_LANGUAGES[currentLang] || CLOCK_LANGUAGES["de"];
+    const coords = getActiveCoords(currentLang, h, m);
+    const parts  = new Set();
+    coords.forEach(([row, start, end]) => {
+      let s = "";
+      for (let c = start; c <= end; c++) s += def.matrixRows[row][c];
+      parts.add(s);
+    });
+    document.getElementById("timeDisp").textContent =
+            String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0");
+    document.getElementById("wordDisp").textContent = [...parts].join(" ");
+  }
+
+  function setTime(h, m) {
+    clock.setTestTime(h, m);
+    updateDebug(h, m);
+  }
+
+  function resetToNow() {
+    clock.clearTestTime();
+    const now = new Date();
+    updateDebug(now.getHours(), now.getMinutes());
+  }
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll(".lang-tabs button").forEach(b => b.classList.remove("active"));
+    event.target.classList.add("active");
+    clock.setConfig({ language: lang });
+    // Testzeit nach Sprachwechsel neu anwenden
+    if (clock._testTime) {
+      updateDebug(clock._testTime.h, clock._testTime.m);
+    } else {
+      const now = new Date();
+      updateDebug(now.getHours(), now.getMinutes());
+    }
+  }
+
+  // Initiale Debug-Ausgabe
+  const now = new Date();
+  updateDebug(now.getHours(), now.getMinutes());
+</script>
+
+</body>
+</html>

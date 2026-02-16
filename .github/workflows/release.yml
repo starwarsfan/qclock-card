@@ -1,0 +1,82 @@
+name: "Release"
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions: {}
+
+env:
+  INTEGRATION_NAME: qclock-card
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Extract release notes
+        run: |
+          TAG_NAME="${GITHUB_REF##*/}"
+          python3 <<EOF
+          import re
+          tag = "${TAG_NAME}"
+          # Remove -RC* suffix for release candidates
+          base_version = re.sub(r'-RC\d*$', '', tag)
+          with open('RELEASENOTES.md', 'r') as f:
+              lines = f.readlines()
+          pattern = re.compile(r'^##\s+' + re.escape(base_version) + r'\s*$')
+          notes = []
+          in_section = False
+          for line in lines:
+              if pattern.match(line):
+                  in_section = True
+                  continue
+              if in_section and line.startswith('## '):
+                  break
+              if in_section:
+                  notes.append(line.rstrip())
+          with open('.github/RELEASENOTES_FOOTER.md', 'r') as footer:
+              notes.append(footer.read().strip())
+          with open('release_notes.txt', 'w') as out:
+              out.write('\n'.join(notes).strip())
+          EOF
+
+      - name: Set version and hash variables
+        run: |
+          echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "GITHASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: ZIP the integration directory
+        run: |
+          cd custom_components
+          zip -r ../${{ env.INTEGRATION_NAME }}-${{ env.VERSION }}-${{ env.GITHASH }}.zip ./
+
+      - name: Set prerelease flag
+        run: |
+          if [[ "${GITHUB_REF##*/}" =~ -RC ]]; then
+            echo "PRERELEASE=true" >> $GITHUB_ENV
+          else
+            echo "PRERELEASE=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create GitHub Release and Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body_path: release_notes.txt
+          files: ${{ env.INTEGRATION_NAME }}-${{ env.VERSION }}-${{ env.GITHASH }}.zip
+          prerelease: ${{ env.PRERELEASE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
