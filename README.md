@@ -21,12 +21,68 @@ Gehe zur [deutschen Version](/README.de.md) der Dokumentation.
 
 # What it does
 
+The **QClock Card** is a configurable word clock in the form of a Home Assistant Lovelace card, which can be customized to your own layout with various settings. Two screenshots are shown here as examples.
+
+* Light Theme:
+  ![QClock hell](./images/qclock_light.png)
+
+* Dark Theme:
+  ![QClock dunkel](./images/qclock_dark.png)
+
+The clock displays the current time in five-minute increments in word form, with four dots at the bottom marking the minutes "in between".
+
 # Installation
 
 **QClock Card** is a default Lovelace card within HACS. To install it, simply search for it within HACS and add it to your installation. After a Home Assistant restart, the card can be used within the UI.
 
 # Configuration
 
+Once the map has been added to the UI, it can be configured directly there. The following options are available:
+
+* Language
+  * German
+  * English
+  * French
+  * Italian
+  * Spanish
+* Font size
+* Colors
+  * Background
+  * Sentence start color
+  * Current time words color
+  * Inactive letters color
+
+Colors can also be selected via the color picker by clicking on the color swatch. Depending on the layout, the map will look like this in edit mode, for example:
+
+* Light Theme:
+  ![QClock hell](./images/qclock_config_light.png)
+
+* Dark Theme:
+  ![QClock dunkel](./images/qclock_config_dark.png)
+
+## Here are some color variations:
+
+* Warm/Classic – like a real wooden word clock:
+  ```
+  Background:          "#f5f0e8" # warm creamy white
+  Sentence starter:    "#8b4513" # saddle brown
+  Time words:          "#2c1810" # dark brown
+  Inactive characters: "#d4c5a9" # light beige
+  ```
+* Cool/Modern – simple light gray:
+  ```
+  Background:          "#f0f0f0" # light gray
+  Sentence starter:    "#0066cc" # clear blue
+  Time words:          "#1a1a2e" # almost black with a bluish tint
+  Inactive characters: "#c8c8c8" # medium gray
+  ```
+* Minimal/Black and white:
+  ```
+  Background:          "#ffffff" # pure white
+  Sentence starter:    "#555555" # dark gray
+  Time words:          "#111111" # almost black
+  Inactive characters: "#dddddd" # light gray
+  ```
 
 
 [hacs]: https://hacs.xyz

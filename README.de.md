@@ -21,12 +21,68 @@ Go to the [English version](/README.md) version of the documentation.
 
 # Einführung
 
+Die **QClock Card** ist eine konfigurierbare Wort-Uhr als Home Assistant Lovelace Karte, welche sich mit verschiedenen Einstellungen an das eigene Layout anpassen lässt. Hier als Beispiel zwei Screenshots.
+
+* Helles Theme:
+  ![QClock hell](./images/qclock_light.png)
+
+* Dunkles Theme:
+  ![QClock dunkel](./images/qclock_dark.png)
+
+Die Uhr gibt dabei die aktuelle Zeit in fünf-Minuten-Schritten in Wortform aus, wobei am unteren Rand vier Punkte die Minuten "dazwischen" markieren.
+
 # Installation
 
 **QClock Card** ist eine Default Lovelace Card in HACS. Zur Installation genügt es also, in HACS danach zu suchen, die Card hinzuzufügen und Home Assistant neu zu starten. Im Anschluss kann die Card im UI verwendet werden.
 
 # Konfiguration
 
+Nachdem die Karte auf dem UI hinzugefügt wurde, kann diese direkt dort konfiguriert werden. Dabei stehen die folgenden Optionen zur Wahl:
+
+* Sprache
+  * Deutsch
+  * Englisch
+  * Französisch
+  * Italienisch
+  * Spanisch
+* Schriftgrösse
+* Farben
+  * Hintergrund
+  * Farbe Satzanfang
+  * Farbe der aktuellen Zeit-Wörter
+  * Farbe der inaktiven Buchstaben
+
+Die Farben können durch Klick auf das Farbfeld auch via Colorpicker ausgewählt werden. Je nach Layout sieht die Karte im Editiermodus bspw. so aus:
+
+* Helles Theme:
+  ![QClock hell](./images/qclock_config_light.png)
+
+* Dunkles Theme:
+  ![QClock dunkel](./images/qclock_config_dark.png)
+
+## Hier einige Farbvarianten:
+
+* Warm/Klassisch – wie eine echte Holz-Wort-Uhr:
+  ```
+  Hintergrund:      "#f5f0e8"   # warmes Cremeweiß
+  Satzanfang:       "#8b4513"   # Sattelbraun
+  Zeit-Wörter:      "#2c1810"   # dunkles Dunkelbraun
+  inaktive Zeichen: "#d4c5a9"   # helles Beige
+  ```
+* Cool/Modern – schlichtes Hellgrau:
+  ```
+  Hintergrund:      "#f0f0f0"   # hellgrau
+  Satzanfang:       "#0066cc"   # klares Blau
+  Zeit-Wörter:      "#1a1a2e"   # fast Schwarz mit Blaustich
+  inaktive Zeichen: "#c8c8c8"   # mittelgrau
+  ```
+* Minimalst/Schwarz-Weiss:
+  ```
+  Hintergrund:      "#ffffff"   # reines Weiß
+  Satzanfang:       "#555555"   # Dunkelgrau
+  Zeit-Wörter:      "#111111"   # fast Schwarz
+  inaktive Zeichen: "#dddddd"   # hellgrau
+  ```
 
 
 [hacs]: https://hacs.xyz
