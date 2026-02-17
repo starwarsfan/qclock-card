@@ -392,6 +392,7 @@ function getMinuteDots(minutes) {
 const QCLOCK_STYLES = `
   :host {
     display: block;
+    aspect-ratio: 1 / 1;        /* Card im Dashboard quadratisch halten */
     --qc-bg:       var(--qclock-bg,       #0d0d0d);
     --qc-active:   var(--qclock-active,   #e8d5b0);
     --qc-inactive: var(--qclock-inactive, #252018);
@@ -413,6 +414,9 @@ const QCLOCK_STYLES = `
     gap: 0.3em;
     position: relative;
     overflow: hidden;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
     box-shadow:
       inset 0 0 60px rgba(0,0,0,0.65),
       0 6px 30px rgba(0,0,0,0.55),
