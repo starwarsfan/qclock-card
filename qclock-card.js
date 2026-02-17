@@ -489,6 +489,338 @@ const QCLOCK_STYLES = `
 // CUSTOM ELEMENT
 // ─────────────────────────────────────────────────────────────────────────────
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VISUAL EDITOR
+// ─────────────────────────────────────────────────────────────────────────────
+
+const EDITOR_STYLES = `
+  :host {
+    display: block;
+    font-family: var(--paper-font-body1_-_font-family, sans-serif);
+  }
+
+  .editor {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 4px 0;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Zwei Felder nebeneinander */
+  .row-inline {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .row-inline .row-lang {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .row-inline .row-size {
+    width: 110px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  label {
+    font-size: 0.85rem;
+    color: var(--secondary-text-color, #888);
+    font-weight: 500;
+  }
+
+  select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--divider-color, #e0e0e0);
+    border-radius: 4px;
+    background: var(--card-background-color, #fff);
+    color: var(--primary-text-color, #212121);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: var(--primary-color, #03a9f4);
+  }
+
+  /* Farbfelder: 2 Spalten nebeneinander */
+  .color-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+  }
+
+  .color-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .color-field label {
+    font-size: 0.85rem;
+    color: var(--secondary-text-color, #888);
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .color-inputs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  input[type="color"] {
+    width: 36px;
+    height: 32px;
+    padding: 2px;
+    border: 1px solid var(--divider-color, #e0e0e0);
+    border-radius: 4px;
+    cursor: pointer;
+    background: none;
+    flex-shrink: 0;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+    border: 1px solid var(--divider-color, #e0e0e0);
+    border-radius: 4px;
+    background: var(--card-background-color, #fff);
+    color: var(--primary-text-color, #212121);
+    font-size: 0.85rem;
+    font-family: monospace;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-color, #03a9f4);
+  }
+
+  input[type="number"] {
+    width: 100px;
+    padding: 8px 6px 8px 10px;
+    border: 1px solid var(--divider-color, #e0e0e0);
+    border-radius: 4px;
+    background: var(--card-background-color, #fff);
+    color: var(--primary-text-color, #212121);
+    font-size: 1rem;
+  }
+
+  .hint {
+    font-size: 0.75rem;
+    color: var(--secondary-text-color, #888);
+    margin-top: 2px;
+  }
+
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--secondary-text-color, #888);
+    border-bottom: 1px solid var(--divider-color, #e0e0e0);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+  }
+`;
+
+class QClockCardEditor extends HTMLElement {
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this._config = {};
+  }
+
+  setConfig(config) {
+    this._config = { ...config };
+    this._render();
+  }
+
+  // Wird von HA aufgerufen wenn sich externe States ändern – hier nicht nötig
+  set hass(hass) {}
+
+  _render() {
+    const s = this.shadowRoot;
+    s.innerHTML = "";
+
+    const style = document.createElement("style");
+    style.textContent = EDITOR_STYLES;
+    s.appendChild(style);
+
+    const editor = document.createElement("div");
+    editor.className = "editor";
+
+    // ── Sprache + Schriftgrösse nebeneinander ────────────────────────────────
+    editor.appendChild(this._sectionTitle("Allgemein"));
+    const inlineRow = document.createElement("div");
+    inlineRow.className = "row-inline";
+    const langField = this._buildSelect(
+        "language", "Sprache",
+        Object.entries(CLOCK_LANGUAGES).map(([k, v]) => ({ value: k, label: v.label })),
+        this._config.language || "de"
+    );
+    langField.className = "row-lang";
+    inlineRow.appendChild(langField);
+    const sizeField = this._buildNumber(
+        "font_size", "Grösse (rem)",
+        this._config.font_size || 1.55,
+        "0.5", "5", "0.05",
+        "1.4–2.0"
+    );
+    sizeField.className = "row-size";
+    inlineRow.appendChild(sizeField);
+    editor.appendChild(inlineRow);
+
+    // ── Farben ───────────────────────────────────────────────────────────────
+    editor.appendChild(this._sectionTitle("Farben"));
+    const colorGrid = document.createElement("div");
+    colorGrid.className = "color-grid";
+    colorGrid.appendChild(this._buildColor("color_background", "Hintergrund",        this._config.color_background || "#0d0d0d"));
+    colorGrid.appendChild(this._buildColor("color_active",     "Aktive Buchstaben",  this._config.color_active     || "#e8d5b0"));
+    colorGrid.appendChild(this._buildColor("color_highlight",  "Highlight (ES IST)", this._config.color_highlight  || "#c8a050"));
+    colorGrid.appendChild(this._buildColor("color_inactive",   "Inaktive Buchst.",   this._config.color_inactive   || "#252018"));
+    editor.appendChild(colorGrid);
+
+    s.appendChild(editor);
+  }
+
+  // ── Hilfsmethoden ─────────────────────────────────────────────────────────
+
+  _sectionTitle(text) {
+    const el = document.createElement("div");
+    el.className = "section-title";
+    el.textContent = text;
+    return el;
+  }
+
+  _buildSelect(key, labelText, options, currentValue) {
+    const row = document.createElement("div");
+    row.className = "row";
+
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    row.appendChild(label);
+
+    const select = document.createElement("select");
+    options.forEach(({ value, label }) => {
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = label;
+      if (value === currentValue) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.addEventListener("change", () => this._fire(key, select.value));
+    row.appendChild(select);
+    return row;
+  }
+
+  _buildColor(key, labelText, currentValue) {
+    const row = document.createElement("div");
+    row.className = "color-field";
+
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    row.appendChild(label);
+
+    const inputs = document.createElement("div");
+    inputs.className = "color-inputs";
+
+    // Color Picker
+    const picker = document.createElement("input");
+    picker.type  = "color";
+    picker.value = currentValue;
+
+    // Hex-Textfeld
+    const text = document.createElement("input");
+    text.type  = "text";
+    text.value = currentValue;
+    text.maxLength = 7;
+    text.placeholder = "#000000";
+
+    // Picker → Text + Fire
+    picker.addEventListener("input", () => {
+      text.value = picker.value;
+      this._fire(key, picker.value);
+    });
+
+    // Text → Picker + Fire (nur bei gültigem Hex)
+    text.addEventListener("change", () => {
+      const val = text.value.trim();
+      if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+        picker.value = val;
+        this._fire(key, val);
+      }
+    });
+
+    inputs.appendChild(picker);
+    inputs.appendChild(text);
+    row.appendChild(inputs);
+    return row;
+  }
+
+  _buildNumber(key, labelText, currentValue, min, max, step, hint) {
+    const row = document.createElement("div");
+    row.className = "row";
+
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    row.appendChild(label);
+
+    const input = document.createElement("input");
+    input.type  = "number";
+    input.min   = parseFloat(min);
+    input.max   = parseFloat(max);
+    input.step  = parseFloat(step);
+    input.value = parseFloat(currentValue);  // value NACH min/max setzen
+    input.addEventListener("change", () => {
+      const val = parseFloat(input.value);
+      if (!isNaN(val)) this._fire(key, val);
+    });
+    row.appendChild(input);
+
+    if (hint) {
+      const hintEl = document.createElement("div");
+      hintEl.className = "hint";
+      hintEl.textContent = hint;
+      row.appendChild(hintEl);
+    }
+
+    return row;
+  }
+
+  // Config-Changed Event an HA schicken
+  _fire(key, value) {
+    this._config = { ...this._config, [key]: value };
+    this.dispatchEvent(new CustomEvent("config-changed", {
+      detail:  { config: this._config },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+}
+
 class QClockCard extends HTMLElement {
 
   constructor() {
@@ -503,9 +835,11 @@ class QClockCard extends HTMLElement {
 
   setConfig(config) {
     this._cfg = { language: "de", ...config };
-    // Raster neu bauen wenn Sprache gewechselt hat
     if (this._cfg.language !== this._builtLang) {
       this._build();
+    } else {
+      const wrapper = this.shadowRoot && this.shadowRoot.querySelector(".wrapper");
+      this._applyCSSVars();
     }
     this._update();
   }
@@ -555,7 +889,7 @@ class QClockCard extends HTMLElement {
 
     const wrapper = document.createElement("div");
     wrapper.className = "wrapper";
-    this._applyCSSVars(wrapper);
+    this._applyCSSVars();
 
     // Buchstaben-Raster
     def.matrixRows.forEach((row, ri) => {
@@ -635,13 +969,22 @@ class QClockCard extends HTMLElement {
   }
 
   // ── CSS-Variablen ─────────────────────────────────────────────────────────
-  _applyCSSVars(el) {
+  // Auf 'this' (dem Host-Element) setzen – greift via :host in allen Shadow-Root-Tiefen
+  _applyCSSVars() {
     const c = this._cfg;
-    if (c.color_background) el.style.setProperty("--qclock-bg",        c.color_background);
-    if (c.color_active)     el.style.setProperty("--qclock-active",    c.color_active);
-    if (c.color_inactive)   el.style.setProperty("--qclock-inactive",  c.color_inactive);
-    if (c.color_highlight)  el.style.setProperty("--qclock-highlight", c.color_highlight);
-    if (c.font_size)        el.style.setProperty("--qclock-fs",        `${c.font_size}rem`);
+    if (c.color_background) this.style.setProperty("--qclock-bg",        c.color_background);
+    if (c.color_active)     this.style.setProperty("--qclock-active",    c.color_active);
+    if (c.color_inactive)   this.style.setProperty("--qclock-inactive",  c.color_inactive);
+    if (c.color_highlight)  this.style.setProperty("--qclock-highlight", c.color_highlight);
+    if (c.font_size)        this.style.setProperty("--qclock-fs",        `${c.font_size}rem`);
+  }
+
+  static getConfigElement() {
+    // Sicherstellen dass der Editor registriert ist bevor HA ihn anfordert
+    if (!customElements.get("qclock-card-editor")) {
+      customElements.define("qclock-card-editor", QClockCardEditor);
+    }
+    return document.createElement("qclock-card-editor");
   }
 
   static getStubConfig() {
@@ -656,6 +999,8 @@ class QClockCard extends HTMLElement {
 }
 
 customElements.define("qclock-card", QClockCard);
+
+
 
 // HACS-Registrierung
 window.customCards = window.customCards || [];
