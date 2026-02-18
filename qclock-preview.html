@@ -1,86 +1,86 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QClock Preview</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #141210;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      font-family: 'Courier New', monospace;
-      padding: 2rem 1rem;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QClock Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #141210;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    font-family: 'Courier New', monospace;
+    padding: 2rem 1rem;
+  }
 
-    h1 { color: #c8a050; font-size: 0.85rem; letter-spacing: 0.4em; opacity: 0.6; }
+  h1 { color: #c8a050; font-size: 0.85rem; letter-spacing: 0.4em; opacity: 0.6; }
 
-    .card-wrapper { width: min(340px, 88vw); }
+  .card-wrapper { width: min(480px, 92vw); }
 
-    .lang-tabs {
-      display: flex;
-      gap: 0.4rem;
-      justify-content: center;
-    }
-    .lang-tabs button {
-      background: #1e1a14;
-      border: 1px solid #332b1e;
-      color: #7a6a4a;
-      padding: 0.3em 0.9em;
-      font-family: 'Courier New', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-    .lang-tabs button:hover  { background: #2a2318; color: #c8a050; }
-    .lang-tabs button.active { background: #2a2318; border-color: #c8a050; color: #c8a050; }
+  .lang-tabs {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: center;
+  }
+  .lang-tabs button {
+    background: #1e1a14;
+    border: 1px solid #332b1e;
+    color: #7a6a4a;
+    padding: 0.3em 0.9em;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .lang-tabs button:hover  { background: #2a2318; color: #c8a050; }
+  .lang-tabs button.active { background: #2a2318; border-color: #c8a050; color: #c8a050; }
 
-    .time-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.35rem;
-      max-width: 340px;
-      width: 100%;
-    }
-    .time-grid button {
-      background: #1a1710;
-      border: 1px solid #2a2518;
-      color: #7a6a4a;
-      padding: 0.35em 0;
-      font-family: 'Courier New', monospace;
-      font-size: 0.7rem;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: all 0.2s;
-      letter-spacing: 0.04em;
-    }
-    .time-grid button:hover { background: #242010; color: #c8a050; }
-    .time-grid button.now  {
-      background: #242010;
-      border-color: #c8a050;
-      color: #c8a050;
-      grid-column: span 4;
-      letter-spacing: 0.15em;
-    }
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.35rem;
+    max-width: 340px;
+    width: 100%;
+  }
+  .time-grid button {
+    background: #1a1710;
+    border: 1px solid #2a2518;
+    color: #7a6a4a;
+    padding: 0.35em 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .time-grid button:hover { background: #242010; color: #c8a050; }
+  .time-grid button.now  {
+    background: #242010;
+    border-color: #c8a050;
+    color: #c8a050;
+    grid-column: span 4;
+    letter-spacing: 0.15em;
+  }
 
-    .debug {
-      color: #4a4030;
-      font-size: 0.7rem;
-      letter-spacing: 0.06em;
-      text-align: center;
-    }
-    .debug .t { color: #8a7050; }
-    .debug .w { color: #c8a050; }
-  </style>
+  .debug {
+    color: #4a4030;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-align: center;
+  }
+  .debug .t { color: #8a7050; }
+  .debug .w { color: #c8a050; }
+</style>
 
-  <script src="qclock-card.js"></script>
+<script src="qclock-card.js"></script>
 </head>
 <body>
 
@@ -92,6 +92,7 @@
 
 <div class="lang-tabs">
   <button onclick="setLang('de')" class="active">DE</button>
+  <button onclick="setLang('de_east')">DE-OST</button>
   <button onclick="setLang('en')">EN</button>
   <button onclick="setLang('fr')">FR</button>
   <button onclick="setLang('it')">IT</button>
@@ -140,7 +141,7 @@
       parts.add(s);
     });
     document.getElementById("timeDisp").textContent =
-            String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0");
+      String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0");
     document.getElementById("wordDisp").textContent = [...parts].join(" ");
   }
 
