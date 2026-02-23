@@ -9,7 +9,7 @@
  *
  * Lovelace-Konfiguration:
  *   type: custom:qclock-card
- *   language: de              # de | en | fr | it | es  (default: de)
+ *   language: de   # de | de_east | en | fr | it | es  (default: de)
  *   color_active: "#e8d5b0"
  *   color_inactive: "#252018"
  *   color_background: "#0d0d0d"
@@ -94,8 +94,8 @@ const CLOCK_LANGUAGES = {
     },
 
 
-    // ── Deutsch (Ost) ────────────────────────────────────────────────────────
-    // Ostdeutsche Zeitansage: "Viertel Sieben" = 6:15, "Dreiviertel Neun" = 8:45
+    // ── Deutsch (¼/¾) ────────────────────────────────────────────────────────
+    // Viertel/Dreiviertel Zeitansage: "Viertel Sieben" = 6:15, "Dreiviertel Neun" = 8:45
     // E S K I S T L F Ü N F
     // Z E H N Z W A N Z I G
     // D R E I V I E R T E L
@@ -108,7 +108,7 @@ const CLOCK_LANGUAGES = {
     // S E C H S U H R E I N
     // E I N S U H R K A B C
     de_east: {
-        label: "Deutsch (Ost)",
+        label: "Deutsch (¼/¾)",
         matrixRows: [
             ["E", "S", "K", "I", "S", "T", "L", "F", "Ü", "N", "F"],  // 0
             ["Z", "E", "H", "N", "Z", "W", "A", "N", "Z", "I", "G"],  // 1
