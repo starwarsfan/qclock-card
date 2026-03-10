@@ -1,3 +1,6 @@
+![logo](/images/logo.svg#gh-light-mode-only)
+![logo](/images/dark_logo.svg#gh-dark-mode-only)
+
 # QClock Card
 
 **A Home Assistant Lovelace QClock Card.**
