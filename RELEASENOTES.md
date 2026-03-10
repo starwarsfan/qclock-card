@@ -1,5 +1,9 @@
 # Changes
 
+## 0.2.0
+### New features:
+* Add German "viertel/dreiviertel" style
+
 ## 0.1.0
 * Initial release of Lovelace QClock card
 * Configurable using visual editor

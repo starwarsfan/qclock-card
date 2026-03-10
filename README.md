@@ -41,6 +41,7 @@ Once the map has been added to the UI, it can be configured directly there. The 
 
 * Language
   * German
+  * German (¼/¾)
   * English
   * French
   * Italian

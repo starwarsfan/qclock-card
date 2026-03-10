@@ -41,6 +41,7 @@ Nachdem die Karte auf dem UI hinzugefügt wurde, kann diese direkt dort konfigur
 
 * Sprache
   * Deutsch
+  * Deutsch (¼/¾)
   * Englisch
   * Französisch
   * Italienisch
