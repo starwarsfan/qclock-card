@@ -2,7 +2,7 @@
  * QClock Card – Wort-Uhr für Home Assistant Lovelace
  *
  * Portiert aus der Edomi-Implementation (PHP) von Yves.
- * Unterstützte Sprachen: de, en, fr, it, es
+ * Unterstützte Sprachen: de, en, fr, it, es, sv
  * Erweiterbar: neuen Sprachblock in CLOCK_LANGUAGES ergänzen → PR stellen.
  *
  * HACS:  content_in_root: true  (hacs.json)
