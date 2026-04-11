@@ -1,5 +1,9 @@
 # Changes
 
+## 0.4.0
+### New features:
+* Add Swedish translation, thx @strelniece for the contribution!
+
 ## 0.3.0
 ### New features:
 * Add switch to disable box shadow
