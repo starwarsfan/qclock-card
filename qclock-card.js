@@ -2,14 +2,14 @@
  * QClock Card – Wort-Uhr für Home Assistant Lovelace
  *
  * Portiert aus der Edomi-Implementation (PHP) von Yves.
- * Unterstützte Sprachen: de, en, fr, it, es
+ * Unterstützte Sprachen: de, en, fr, it, es, sv
  * Erweiterbar: neuen Sprachblock in CLOCK_LANGUAGES ergänzen → PR stellen.
  *
  * HACS:  content_in_root: true  (hacs.json)
  *
  * Lovelace-Konfiguration:
  *   type: custom:qclock-card
- *   language: de   # de | de_quarter | en | fr | it | es  (default: de)
+ *   language: de   # de | de_quarter | en | fr | it | es | sv  (default: de)
  *   color_active: "#e8d5b0"
  *   color_inactive: "#252018"
  *   color_background: "#0d0d0d"
@@ -389,6 +389,64 @@ const CLOCK_LANGUAGES = {
             55: [[6, 6, 10], [9, 6, 10]],   // MENOS CINCO
         },
         hourIncrement: 30,
+    },
+    // ── Svenska ───────────────────────────────────────────────────────────────     
+        //    K L O C K A N T Ä R K
+        //    F E M Y I S T I O N I
+        //    K V A R T Q I E N Z O
+        //    T J U G O L I V I P M
+        //    Ö V E R K A M H A L V
+        //    E T T U S V L X T V Å
+        //    T R E M Y K Y F Y R A
+        //    F E M S F L O R S E X
+        //    S J U Å T T A I N I O
+        //    T I O E L V A T O L V
+    sv: {
+        label: "Svenska",
+        matrixRows: [
+            ["K", "L", "O", "C", "K", "A", "N", "T", "Ä", "R", "K"],
+            ["F", "E", "M", "Y", "I", "S", "T", "I", "O", "N", "I"],
+            ["K", "V", "A", "R", "T", "Q", "I", "E", "N", "Z", "O"],
+            ["T", "J", "U", "G", "O", "L", "I", "V", "I", "P", "M"],
+            ["Ö", "V", "E", "R", "K", "A", "M", "H", "A", "L", "V"],
+            ["E", "T", "T", "U", "S", "V", "L", "X", "T", "V", "Å"],
+            ["T", "R", "E", "M", "Y", "K", "Y", "F", "Y", "R", "A"],
+            ["F", "E", "M", "S", "F", "L", "O", "R", "S", "E", "X"],
+            ["S", "J", "U", "Å", "T", "T", "A", "I", "N", "I", "O"],
+            ["T", "I", "O", "E", "L", "V", "A", "T", "O", "L", "V"],
+        ],
+        startWords: [[0, 0, 6], [0, 8, 9]], // KLOCKAN ÄR
+        endWords: [],             
+        hourWords: {
+            0: [[9, 7, 10]],        // TOLV
+            1: [[5, 0, 2]],         // ETT
+            2: [[5, 8, 10]],        // TVÅ
+            3: [[6, 0, 2]],         // TRE
+            4: [[6, 7, 10]],        // FYRA
+            5: [[7, 0, 2]],         // FEM
+            6: [[7, 8, 10]],        // SEX
+            7: [[8, 0, 2]],         // SJU
+            8: [[8, 3, 6]],         // ÅTTA
+            9: [[8, 8, 10]],        // NIO
+            10: [[9, 0, 2]],        // TIO
+            11: [[9, 3, 6]],        // ELVA
+            12: [[9, 7, 10]],       // TOLV
+            100: [],  
+        },
+        minuteWords: {
+             5: [[1, 0, 2], [4, 0, 3]],             // FEM ÖVER
+            10: [[1, 6, 8], [4, 0, 3]],             // TIO ÖVER
+            15: [[2, 0, 4], [4, 0, 3]],             // KVART ÖVER
+            20: [[3, 0, 4], [4, 0, 3]],             // TJUGO ÖVER
+            25: [[1, 0, 2], [1, 4, 4], [4, 7, 10]], // FEM I HALV
+            30: [[4, 7, 10]],                       // HALV
+            35: [[1, 0, 2], [4, 0, 3], [4, 7, 10]], // FEM ÖVER HALV
+            40: [[3, 0, 4], [3, 6, 6]],             // TJUGO I
+            45: [[2, 0, 4], [2, 6, 6]],             // KVART I
+            50: [[1, 6, 8], [1, 10, 10]],           // TIO I
+            55: [[1, 0, 2], [1, 4, 4]],             // FEM I
+        },
+        hourIncrement: 24,
     },
 };
 
@@ -1122,7 +1180,7 @@ window.customCards = window.customCards || [];
 window.customCards.push({
     type: "qclock-card",
     name: "QClock – Wort-Uhr",
-    description: "Wort-Uhr (Word Clock) in Deutsch, Englisch, Französisch, Italienisch und Spanisch.",
+    description: "Wort-Uhr (Word Clock) in Deutsch, Englisch, Französisch, Italienisch, Spanisch und Schwedisch.",
     preview: true,
     documentationURL: "https://github.com/YOUR_GITHUB/qclock-card",
 });

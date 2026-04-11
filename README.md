@@ -49,6 +49,7 @@ Once the map has been added to the UI, it can be configured directly there. The 
   * French
   * Italian
   * Spanish
+  * Swedish
 * Font size
 * Shadow / border (checkbox to show or hide the box-shadow around the card)
 * Colors

@@ -49,6 +49,7 @@ Nachdem die Karte auf dem UI hinzugefügt wurde, kann diese direkt dort konfigur
   * Französisch
   * Italienisch
   * Spanisch
+  * Schwedisch
 * Schriftgrösse
 * Schatten / Rahmen (Checkbox zum Ein- oder Ausblenden des Schattens um die Karte)
 * Farben
