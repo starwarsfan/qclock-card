@@ -2,14 +2,14 @@
  * QClock Card – Wort-Uhr für Home Assistant Lovelace
  *
  * Portiert aus der Edomi-Implementation (PHP) von Yves.
- * Unterstützte Sprachen: de, en, fr, it, es, sv
+ * Unterstützte Sprachen: de, en, fr, it, es, sv, nl
  * Erweiterbar: neuen Sprachblock in CLOCK_LANGUAGES ergänzen → PR stellen.
  *
  * HACS:  content_in_root: true  (hacs.json)
  *
  * Lovelace-Konfiguration:
  *   type: custom:qclock-card
- *   language: de   # de | de_quarter | en | fr | it | es | sv  (default: de)
+ *   language: de   # de | de_quarter | en | fr | it | es | sv | nl  (default: de)
  *   color_active: "#e8d5b0"
  *   color_inactive: "#252018"
  *   color_background: "#0d0d0d"
@@ -447,6 +447,65 @@ const CLOCK_LANGUAGES = {
             55: [[1, 0, 2], [1, 4, 4]],             // FEM I
         },
         hourIncrement: 24,
+    },
+
+    // ── Nederlands ───────────────────────────────────────────────────────────
+    // H E T K I S A V I J F
+    // T I E N A T Z V O O R
+    // O V E R M E K W A R T
+    // H A L F S P M O V E R
+    // V O O R T H G E E N S
+    // T W E E A M C D R I E
+    // V I E R V I J F Z E S
+    // Z E V E N O N E G E N
+    // A C H T T I E N E L F
+    // T W A A L F P M U U R
+    nl: {
+        label: "Nederlands",
+        matrixRows: [
+            ["H", "E", "T", "K", "I", "S", "A", "V", "I", "J", "F"],
+            ["T", "I", "E", "N", "A", "T", "Z", "V", "O", "O", "R"],
+            ["O", "V", "E", "R", "M", "E", "K", "W", "A", "R", "T"],
+            ["H", "A", "L", "F", "S", "P", "M", "O", "V", "E", "R"],
+            ["V", "O", "O", "R", "T", "H", "G", "E", "E", "N", "S"],
+            ["T", "W", "E", "E", "A", "M", "C", "D", "R", "I", "E"],
+            ["V", "I", "E", "R", "V", "I", "J", "F", "Z", "E", "S"],
+            ["Z", "E", "V", "E", "N", "O", "N", "E", "G", "E", "N"],
+            ["A", "C", "H", "T", "T", "I", "E", "N", "E", "L", "F"],
+            ["T", "W", "A", "A", "L", "F", "P", "M", "U", "U", "R"],
+        ],
+        startWords: [[0, 0, 2], [0, 4, 5]], // HET IS
+        endWords: [[9, 8, 10]],              // UUR
+        hourWords: {
+            0: [[9, 0, 5]],    // TWAALF
+            1: [[4, 7, 9]],    // EEN
+            2: [[5, 0, 3]],    // TWEE
+            3: [[5, 7, 10]],   // DRIE
+            4: [[6, 0, 3]],    // VIER
+            5: [[6, 4, 7]],    // VIJF
+            6: [[6, 8, 10]],   // ZES
+            7: [[7, 0, 4]],    // ZEVEN
+            8: [[8, 0, 3]],    // ACHT
+            9: [[7, 6, 10]],   // NEGEN
+            10: [[8, 4, 7]],   // TIEN
+            11: [[8, 8, 10]],  // ELF
+            12: [[9, 0, 5]],   // TWAALF
+            100: [],
+        },
+        minuteWords: {
+            5: [[0, 7, 10], [2, 0, 3]],             // VIJF OVER
+            10: [[1, 0, 3], [2, 0, 3]],             // TIEN OVER
+            15: [[2, 6, 10], [2, 0, 3]],            // KWART OVER
+            20: [[1, 0, 3], [1, 7, 10], [3, 0, 3]], // TIEN VOOR HALF
+            25: [[0, 7, 10], [1, 7, 10], [3, 0, 3]],// VIJF VOOR HALF
+            30: [[3, 0, 3]],                        // HALF
+            35: [[0, 7, 10], [2, 0, 3], [3, 0, 3]], // VIJF OVER HALF
+            40: [[1, 0, 3], [2, 0, 3], [3, 0, 3]],  // TIEN OVER HALF
+            45: [[2, 6, 10], [4, 0, 3]],            // KWART VOOR
+            50: [[1, 0, 3], [4, 0, 3]],             // TIEN VOOR
+            55: [[0, 7, 10], [4, 0, 3]],            // VIJF VOOR
+        },
+        hourIncrement: 19,  // Ab 20 Minuten wird bereits die nächste Stunde verwendet
     },
 };
 
