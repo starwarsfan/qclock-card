@@ -1,6 +1,6 @@
 {
     "name": "QClock Card",
-    "homeassistant": "2025.4.4",
+    "homeassistant": "2025.5.0",
     "hacs": "2.0.1",
     "render_readme": true,
     "filename": "qclock-card.js"
