@@ -50,6 +50,7 @@ Once the map has been added to the UI, it can be configured directly there. The 
   * Italian
   * Spanish
   * Swedish
+  * Dutch
 * Font size
 * Shadow / border (checkbox to show or hide the box-shadow around the card)
 * Colors
